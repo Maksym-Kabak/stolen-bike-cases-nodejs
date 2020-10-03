@@ -4,42 +4,35 @@ import {caseStatus} from '../../configs';
 class CaseService {
 
   async createCase(caseObj: ICase) {
-    try {
-      const availableOfficer = await OfficerDBModel.findOne({ where: {caseId: null}}) as any;
+    const availableOfficer = await OfficerDBModel.findOne({where: {caseId: null}}) as any;
 
-      caseObj.status = caseStatus.NEW;
+    caseObj.status = caseStatus.NEW;
 
-      if (availableOfficer) {
-        caseObj.officerId = availableOfficer.id;
-        caseObj.status = caseStatus.IN_PROGRESS;
-      }
-
-      const createdCase = await CaseDBModel.create(caseObj) as any;
-
-      if (availableOfficer) {
-        availableOfficer.caseId = createdCase.id;
-        await availableOfficer.save();
-      }
-
-      return createdCase;
-    } catch (e) {
-      console.log(e);
+    if (availableOfficer) {
+      caseObj.officerId = availableOfficer.id;
+      caseObj.status = caseStatus.IN_PROGRESS;
     }
+
+    const createdCase = await CaseDBModel.create(caseObj) as any;
+
+    if (availableOfficer) {
+      availableOfficer.caseId = createdCase.id;
+      await availableOfficer.save();
+    }
+
+    return createdCase;
   }
 
   async resolve(caseId: number) {
-    try {
-      const caseObj = await CaseDBModel.findOne({where: {id: caseId}}) as any;
-      caseObj.status = caseStatus.RESOLVED;
-      const resolvedCase = await caseObj.save();
+    const caseObj = await CaseDBModel.findOne({where: {id: caseId}}) as any;
+    caseObj.status = caseStatus.RESOLVED;
+    const resolvedCase = await caseObj.save();
 
-      await OfficerDBModel.update({caseId: null}, {where: {id: caseObj.officerId}});
-      await this.assignCase(caseObj.officerId);
+    await OfficerDBModel.update({caseId: null}, {where: {id: caseObj.officerId}});
+    await this.assignCase(caseObj.officerId);
 
-      return resolvedCase;
-    } catch (e) {
-      throw e.message;
-    }
+    return resolvedCase;
+
   }
 
   async assignCase(officerId: number) {

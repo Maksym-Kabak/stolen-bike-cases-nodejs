@@ -1,6 +1,6 @@
 import { QueryOptions, Transaction } from 'sequelize';
 
-import { createTransaction } from '../transaction/create.transaction';
+import { createTransaction } from './create.transaction';
 
 export const migrationWrapper = async (method: (options: QueryOptions) => Promise<void>): Promise<void> => {
   const transaction: Transaction = await createTransaction();

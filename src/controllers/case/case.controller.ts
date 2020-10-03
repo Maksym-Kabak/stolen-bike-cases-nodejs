@@ -7,17 +7,25 @@ import {ResponseStatusCodesEnum} from '../../constants';
 
 class CaseController {
   async createCase(req: IRequestExtended, res: Response, next: NextFunction) {
-    const caseObj = req.body;
+    try {
+      const caseObj = req.body;
 
-    await caseService.createCase(caseObj);
+      await caseService.createCase(caseObj);
 
-    res.status(ResponseStatusCodesEnum.CREATED).end();
+      res.status(ResponseStatusCodesEnum.CREATED).end();
+    } catch (e) {
+      next(e);
+    }
   }
 
   async resolveCase(req: IRequestExtended, res: Response, next: NextFunction) {
-    await caseService.resolve(req.body.caseId);
+    try {
+      await caseService.resolve(req.body.caseId);
 
-    res.send(ResponseStatusCodesEnum.CREATED).end();
+      res.send(ResponseStatusCodesEnum.CREATED).end();
+    } catch (e) {
+      next(e);
+    }
   }
 }
 

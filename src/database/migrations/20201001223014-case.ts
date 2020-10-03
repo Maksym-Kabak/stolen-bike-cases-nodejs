@@ -3,7 +3,7 @@ import {ModelAttributes, QueryInterface, QueryOptions} from 'sequelize';
 import {DbTablesEnum} from '../constants';
 import {DBModelFieldInit} from '../db-structure.model';
 import {ICase, IOfficer} from '../model';
-import {migrationWrapper} from './migration.wrapper';
+import {migrationWrapper} from '../transaction/migration.wrapper';
 
 export default {
   up: async (queryInterface: QueryInterface, dataTypes: any) => {

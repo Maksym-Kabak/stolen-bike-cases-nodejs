@@ -6,11 +6,15 @@ import {ResponseStatusCodesEnum} from '../../constants';
 
 class OfficerController {
   async createOfficer(req: IRequestExtended, res: Response, next: NextFunction) {
-    const officer = req.body;
+    try {
+      const officer = req.body;
 
-    await officerService.createOfficer(officer);
+      await officerService.createOfficer(officer);
 
-    res.send(ResponseStatusCodesEnum.CREATED).end();
+      res.send(ResponseStatusCodesEnum.CREATED).end();
+    } catch (e) {
+      next(e);
+    }
   }
 }
 
